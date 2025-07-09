@@ -1,0 +1,90 @@
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+-- Tạo ScreenGui để chứa UI
+local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+screenGui.Name = "FakeBanGUI"
+screenGui.Parent = player:WaitForChild("PlayerGui") -- dùng PlayerGui an toàn
+
+-- Tạo frame flash trắng đen full màn hình
+local flashFrame = Instance.new("Frame")
+flashFrame.Size = UDim2.new(1, 0, 1, 0)
+flashFrame.BackgroundColor3 = Color3.new(1, 1, 1)
+flashFrame.BackgroundTransparency = 1
+flashFrame.BorderSizePixel = 0
+flashFrame.Parent = screenGui
+
+-- Tạo âm thanh jumpscare
+local screamSound = Instance.new("Sound")
+screamSound.SoundId = "rbxassetid://138186576"
+screamSound.Volume = 10
+screamSound.Name = "ScreamSound"
+screamSound.Parent = workspace
+screamSound:Play() -- phát ngay lập tức
+
+-- Hàm nhấp nháy flash màn hình 10 giây
+local function flashingEffect()
+	local on = true
+	local startTime = tick()
+	while tick() - startTime < 10 do
+		flashFrame.BackgroundColor3 = on and Color3.new(1,1,1) or Color3.new(0,0,0)
+		flashFrame.BackgroundTransparency = 0
+		task.wait(0.1)
+		flashFrame.BackgroundTransparency = 1
+		on = not on
+	end
+end
+
+-- Hiện giao diện fake ban
+local function showFakeBanUI()
+	local banFrame = Instance.new("Frame")
+	banFrame.Size = UDim2.new(0.5, 0, 0.4, 0)
+	banFrame.Position = UDim2.new(0.25, 0, 0.3, 0)
+	banFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	banFrame.BorderSizePixel = 0
+	banFrame.Parent = screenGui
+
+	local title = Instance.new("TextLabel")
+	title.Size = UDim2.new(1, 0, 0.2, 0)
+	title.Position = UDim2.new(0, 0, 0, 0)
+	title.Text = "Disconnected"
+	title.TextScaled = true
+	title.Font = Enum.Font.SourceSansBold
+	title.TextColor3 = Color3.new(1, 0, 0)
+	title.BackgroundTransparency = 1
+	title.Parent = banFrame
+
+	local msg = Instance.new("TextLabel")
+	msg.Size = UDim2.new(1, -20, 0.7, 0)
+	msg.Position = UDim2.new(0, 10, 0.2, 0)
+	msg.TextWrapped = true
+	msg.TextXAlignment = Enum.TextXAlignment.Left
+	msg.TextYAlignment = Enum.TextYAlignment.Top
+	msg.Font = Enum.Font.SourceSans
+	msg.TextScaled = true
+	msg.TextColor3 = Color3.new(1, 1, 1)
+	msg.BackgroundTransparency = 1
+
+	msg.Text = "You have been kicked by this experience or its moderators.\n\nModeration message:\n\n" ..
+		"joking this just kidding wait for script run :).\n" ..
+		"waiting 10s haha look who scared"
+
+	msg.Parent = banFrame
+end
+
+-- Kick player thật sau 6 giây
+local function kickPlayer()
+	task.wait(6)
+	player:Kick("We suspect you use script. This is a warning. If you use client one more time, you will be premium banned,stop use script,thanks you for reading this.\n\nModeration message:\n\n" ..
+		"joking this just kidding wait for script run :).\n" ..
+		"waiting 10s haha look who scared")
+end
+
+-- Chạy đồng thời các hiệu ứng
+task.spawn(flashingEffect)
+task.delay(1, showFakeBanUI)
+task.delay(6, kickPlayer)
