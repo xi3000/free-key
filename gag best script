@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 
 local player = Players.LocalPlayer
 
--- Tạo ScreenGui để chứa UI
 local screenGui = Instance.new("ScreenGui")
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
@@ -10,7 +9,6 @@ screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 screenGui.Name = "FakeBanGUI"
 screenGui.Parent = player:WaitForChild("PlayerGui") -- dùng PlayerGui an toàn
 
--- Tạo frame flash trắng đen full màn hình
 local flashFrame = Instance.new("Frame")
 flashFrame.Size = UDim2.new(1, 0, 1, 0)
 flashFrame.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -18,7 +16,6 @@ flashFrame.BackgroundTransparency = 1
 flashFrame.BorderSizePixel = 0
 flashFrame.Parent = screenGui
 
--- Tạo âm thanh jumpscare
 local screamSound = Instance.new("Sound")
 screamSound.SoundId = "rbxassetid://138186576"
 screamSound.Volume = 10
@@ -26,7 +23,6 @@ screamSound.Name = "ScreamSound"
 screamSound.Parent = workspace
 screamSound:Play() -- phát ngay lập tức
 
--- Hàm nhấp nháy flash màn hình 10 giây
 local function flashingEffect()
 	local on = true
 	local startTime = tick()
@@ -39,7 +35,6 @@ local function flashingEffect()
 	end
 end
 
--- Hiện giao diện fake ban
 local function showFakeBanUI()
 	local banFrame = Instance.new("Frame")
 	banFrame.Size = UDim2.new(0.5, 0, 0.4, 0)
@@ -76,7 +71,6 @@ local function showFakeBanUI()
 	msg.Parent = banFrame
 end
 
--- Kick player thật sau 6 giây
 local function kickPlayer()
 	task.wait(6)
 	player:Kick("We suspect you use script. This is a warning. If you use client one more time, you will be premium banned,stop use script,thanks you for reading this.\n\nModeration message:\n\n" ..
@@ -84,7 +78,6 @@ local function kickPlayer()
 		"waiting 10s haha look who scared")
 end
 
--- Chạy đồng thời các hiệu ứng
 task.spawn(flashingEffect)
 task.delay(1, showFakeBanUI)
 task.delay(6, kickPlayer)
